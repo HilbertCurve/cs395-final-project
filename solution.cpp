@@ -1,11 +1,6 @@
-//contextwindow.cpp -- NAC 2026 Challenge
-//problem: Context Window (linear)
-//04-10-2026
-//comments intentionally removed for this assignment
-
 #include <iostream>
 #include <vector>
-#include <deque>
+#include <queue>
 
 using namespace std;
 
@@ -16,8 +11,8 @@ const long long INF = 1e18;
 // window in keep the window under a maximum size.
 void solve()
 {
-    long long N, W;
-    cin >> N >> W;
+    long long N, W, K;
+    cin >> N >> W >> K;
 
     // Read in the message length in tokens.
     vector<long long> L(N + 1, 0);
@@ -41,8 +36,8 @@ void solve()
 
     // dq usually holds up to 2 values at a time, representing the index range
     // of the current context window that has not been summarized.
-    deque<int> dq;
-    dq.push_back(0);
+    queue<int> q;
+    q.push(0);
 
     long long j_min = 0;
 
@@ -53,7 +48,7 @@ void solve()
     // and a summarization event is recorded in dp.
     // Then, one of two things happens:
     // - If we couldn't summarize enough, then j_min == i and we've failed, a
-    //   condition that propagates through the full code by emptying dq.
+    //   condition that propagates through the full code by emptying q.
     // - We maintain an end value `end` that increments along with i.
     // - We maintain a minimum value `begin` that marks how much extra we could
     //   summarize from the previous window before needing another summarization
@@ -66,57 +61,48 @@ void solve()
     {
         // Increment j_min while the sum of the tokens between j_min and i is
         // below the maximum context window length.
-        // Note that the following expressions are equivalent:
-        // - $9 * P[j_min] < 10 * (P[i] - W)$
-        // - $10 * (P[i] - P[j_min] - W) + P[j_min] > 0$
-        // - $(P[i] - P[j_min] - W) + P[j_min] / 10 > 0$
-        // - $(P[i] - P[j_min] + P[j_min] / 10) - W > 0$
         // Effectively, the algorithm marches j_min forward ONLY as far as
-        // necessary to ensure the total token cost doesn't exceed W. It is
-        // rephrased to reduce the number of operations needed.
-        while (j_min < i && 9 * P[j_min] < 10 * (P[i] - W)) {
+        // necessary to ensure the total token cost doesn't exceed W. 
+        while (j_min < i && ((P[j_min] / K) + P[i] - P[j_min]) > W) {
             j_min++;
         }
 
-        // If j_min was updated, clear out first entries of dq until a value
-        // greater than j_min is found. This effectively amounts to putting the
-        // second value in the dq into the first slot. If j_min == i, meaning no
+        // If j_min was updated, clear out first entries of q until a value
+        // greater than j_min is found. If j_min == i, meaning no
         // summarization can be done before adding P[i] to the context window
-        // without extending past W, then the dq is emptied.
+        // without extending past W, then the q is emptied.
         // NOTABLY this only occurs when j_min extends past where i was first
         // inserted, that is, if a new summarization event needs to take place
         // or if the previous one could be "modified" to summarize more than
         // what was locally minimum at the time.
-        while (!dq.empty() && dq.front() < j_min)
+        while (!q.empty() && q.front() < j_min)
         {
-            dq.pop_front();
+            q.pop();
         }
 
-        // If the dq is emptied, we've failed. Otherwise, increase the minimum
+        // If the q is emptied, we've failed. Otherwise, increase the minimum
         // number of times needed to summarize if we need to summarize before
         // the i'th position.
-        if (!dq.empty())
+        if (!q.empty())
         {
-            dp[i] = dp[dq.front()] + 1;
+            dp[i] = dp[q.front()] + 1;
         }
         else
         {
             dp[i] = INF;
         }
-
-        // If we haven't failed, shift right position in dq to the right. This
-        // amounts to increasing the current window one can acquire in the
-        // context window that hasn't been summarized yet.
+        
+        // increment other sliding window
         if (dp[i] != INF)
         {
-            dq.push_back(i);
+            q.push(i);
         }
     }
 
     // Determine the minimum number of elements that need summarization for the
     // stream of messages.
     long long final_j_min = 0;
-    while (final_j_min <= N && 9 * P[final_j_min] < 10 * (P[N] - W))
+    while (final_j_min <= N && (K-1) * P[final_j_min] < K * (P[N] - W))
     {
         final_j_min++;
     }
@@ -126,11 +112,11 @@ void solve()
     // Compute the cost based on the minimum number of times needed to summarize
     // every element before final_j_min as computed above.
     if (final_j_min <= N && dp[final_j_min] != INF)
-        min_total_cost = 100LL * dp[final_j_min] + P[final_j_min];
+        min_total_cost = 64LL * dp[final_j_min] + 2*P[final_j_min];
 
     // Output one line per test case.
     if (min_total_cost == INF)
-        cout << "IMPOSSIBLE\n";
+        cout << "DOWNLOAD MORE RAM\n";
     else
         cout << min_total_cost << "\n";
 }
@@ -141,7 +127,7 @@ int main()
     cin >> t;
 
     // Run all t test cases.
-    for (int tc = 0; tc < t; ++tc)
+    for (int tc = 0; tc < t; tc++)
     {
         solve();
     }

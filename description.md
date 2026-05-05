@@ -1,6 +1,6 @@
-# Problem Description
+# [Problem Title]
 
-Context Window => ______
+**Time Limit: 2 seconds, Memory Limit: 1024 MB**
 
 You're yet another inconspicuous AI startup with a tight budget. You've
 invented a new LLM model that you think will outperform all the leading models
@@ -17,10 +17,12 @@ messages is reduced, while a (potentially empty) suffix of messages is not
 reduced. The length of a reduced message is $\frac{S_i}{K}$ tokens,
 instead of $S_i$.
 
+<!--
 The agent has an internal buffer called its context window. Every message that
 arrives increases the size of the context window by $S_i$. If $C$ is the size
 of the current context window, the cost for storing it in memory after that
 message arrives is $C$.
+-->
 
 After every message arrives, the agent can _reduce_ a prefix of
 messages that is not yet reduced. The cost of reducing messages with
@@ -32,10 +34,19 @@ $W$ tokens.
 
 Among all ways to reduce messages, find the one with minimum total cost,
 where the total length never exceeds $W$ at any point in time. If this is
-impossible, instead output `IMPOSSIBLE`.
+impossible, instead output `DOWNLOAD MORE RAM`.
 
 ## Input
-K input, integer
-N messages, each has size S_i, that is multiple of K
-Maximum capacity C, can't exceed
 
+The first line of input contains an integer $t\ (1\leq t \leq 10000)$, the number of test cases.
+Each test case contains two lines.
+The first line of each test case contains 3 integers $N\ (1\leq N\leq10^5)$, $W\ (1\leq W\leq 10^{18})$, and $K\ (2\leq K\leq 100)$.
+The second line contains N integers $S_1, S_2, \dots, S_N$, the lengths of the messages in the order they arrive. It is guaranteed that $S_i \equiv 0\pmod{K}$. In other words, $S_i$ is a multiple of $K$, and $\frac{S_i}{K}$ is therefore always an integer.
+
+## Output
+
+For each test case, print an integer: the minimum possible cost if it reduces messages optimally. If it is impossible to do this without exceeding $W$, output `DOWNLOAD MORE RAM`.
+
+| Sample Input | Sample Output |
+| --- | --- |
+| ```[input]``` | ```[output]``` |

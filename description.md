@@ -1,4 +1,4 @@
-# [Problem Title]
+# Memory Hungry
 
 **Time Limit: 2 seconds, Memory Limit: 1024 MB**
 

@@ -39,8 +39,11 @@ impossible, instead output `DOWNLOAD MORE RAM`.
 ## Input
 
 The first line of input contains an integer $t\ (1\leq t \leq 10000)$, the number of test cases.
+
 Each test case contains two lines.
+
 The first line of each test case contains 3 integers $N\ (1\leq N\leq10^5)$, $W\ (1\leq W\leq 10^{18})$, and $K\ (2\leq K\leq 100)$.
+
 The second line contains N integers $S_1, S_2, \dots, S_N$, the lengths of the messages in the order they arrive. It is guaranteed that $S_i \equiv 0\pmod{K}$. In other words, $S_i$ is a multiple of $K$, and $\frac{S_i}{K}$ is therefore always an integer.
 
 ## Output
@@ -48,5 +51,5 @@ The second line contains N integers $S_1, S_2, \dots, S_N$, the lengths of the m
 For each test case, print an integer: the minimum possible cost if it reduces messages optimally. If it is impossible to do this without exceeding $W$, output `DOWNLOAD MORE RAM`.
 
 | Sample Input | Sample Output |
-| --- | --- |
-| ```[input]``` | ```[output]``` |
+| :--------------- | :---------------------- |
+| <pre style="vertical-align: top;">3<br>2 100 10<br>90 90<br>4 50 8<br>16 64 16 8<br>4 100 8<br>64 64 16 16</pre> | <pre style="vertical-align: top;">244<br>DOWNLOAD MORE RAM<br>384</pre> |
